@@ -1,5 +1,6 @@
 const {LinValidator,Rule} = require('../../core/lin-validator')
 const { User } = require('../models/user')
+const { LoginType } = require('../lib/enum')
 
 class PositiveIntegerValidator extends LinValidator {
     constructor() {
@@ -63,7 +64,7 @@ class TokenValidator extends LinValidator {
            })
        ]
        this.secret = [
-           new Rule('isOptional'),
+        //    new Rule('isOptional'),
            new Rule('isLength','至少6个字符',{
                 min:6,
                 max:128
@@ -71,7 +72,13 @@ class TokenValidator extends LinValidator {
        ]
     }
     validateLoginType(vals) {
-
+        let type = vals.query.type
+        if(!type) {
+            throw new Error('type是必须参数')
+        }
+        if(!LoginType.isThisType(type)) {
+            throw new Error('type是不合法')
+        }
     } 
 }
 

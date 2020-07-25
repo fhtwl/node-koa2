@@ -1,5 +1,5 @@
 function isThisType(val) {
-    for(let kay in this) {
+    for(let key in this) {
         if(this[key] == val) {
             return true
         }

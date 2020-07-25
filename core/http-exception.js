@@ -28,8 +28,38 @@ class Success extends HttpException {
     }
 }
 
+class NotFount extends HttpException {
+    constructor(msg,errorCode) {
+        super()
+        this.code = 404
+        this.message = msg || '资源未找到'
+        this.errorCode = errorCode || 10001
+    }
+}
+
+class AuthFailed extends HttpException {
+    constructor(msg,errorCode) {
+        super()
+        this.code = 401
+        this.message = msg || '授权失败'
+        this.errorCode = errorCode || 10002
+    }
+}
+
+class Forbbiden extends HttpException {
+    constructor(msg,errorCode) {
+        super()
+        this.code = 403
+        this.message = msg || '禁止访问'
+        this.errorCode = errorCode || 100006
+    }
+}
+
 module.exports = {
     HttpException,
     ParameterException,
-    Success
+    Success,
+    NotFount,
+    AuthFailed,
+    Forbbiden
 }
