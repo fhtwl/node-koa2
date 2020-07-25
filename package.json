@@ -1,0 +1,37 @@
+{
+    "name": "express",
+    "version": "1.0.0",
+    "description": "express",
+    "main": "app.js",
+    "scripts": {
+        "start": "node app.js"
+    },
+    "keywords": [
+        "express",
+        "async"
+    ],
+    "author": "fhtwl",
+    "license": "Apache-2.0",
+    "repository": {
+        "type": "git",
+        "url": ""
+    },
+    "dependencies": {
+        "axios": "^0.19.2",
+        "basic-auth": "^2.0.1",
+        "bcryptjs": "^2.4.3",
+        "jsonwebtoken": "^8.5.1",
+        "koa": "2.7.0",
+        "koa-bodyparser": "4.2.1",
+        "koa-router": "7.0",
+        "koa-static": "^5.0.0",
+        "loadsh": "0.0.4",
+        "mysql": "^2.18.1",
+        "mysql2": "^2.1.0",
+        "node-uuid": "^1.4.8",
+        "npm-check": "^5.9.2",
+        "require-directory": "^2.1.1",
+        "sequelize": "^6.2.3",
+        "validator": "^13.1.1"
+    }
+}
