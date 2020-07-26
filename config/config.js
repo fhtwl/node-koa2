@@ -1,5 +1,5 @@
 const dev = {
-    environment: 'product',
+    environment: 'dev',
     database: {
         dbName: 'nodejs',
         host: 'localhost',
@@ -13,14 +13,14 @@ const product = {
     environment: 'product',
     database: {
         dbName: 'nodejs',
-        host: '172.16.0.8',
-        port: '3306',
+        host: 'cdb-9eux2gx9.gz.tencentcdb.com',
+        port: '10132',
         username: 'root',
         password: 'Hzkj@2019'
     }
 }
 
-let config = dev
+let config = product
 
 config.security = { //token key 配置
     secretKey: 'abcdefg', //key
