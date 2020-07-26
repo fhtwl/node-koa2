@@ -13,14 +13,14 @@ const product = {
     environment: 'product',
     database: {
         dbName: 'nodejs',
-        host: '106.13.202.207',
+        host: '172.16.0.8',
         port: '3306',
         username: 'root',
-        password: 'root'
+        password: 'Hzkj@2019'
     }
 }
 
-let config = product
+let config = dev
 
 config.security = { //token key 配置
     secretKey: 'abcdefg', //key
