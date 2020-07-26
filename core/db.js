@@ -11,7 +11,9 @@ const {
 const sequelize = new Sequelize(dbName,username,password,{
     host,
     port,
-    logging:true,//是否显示sql
+    logging:()=> {
+        return true
+    },//是否显示sql
     timezone:'+08:00',
     dialect: 'mysql',
     define: {

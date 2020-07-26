@@ -13,6 +13,7 @@ app.use(parser())
 const InitManager = require('./core/init')
 InitManager.initCore(app)
 app.listen(3000,()=>{
-    console.log('app started at port 3000...')
+    console.log('\x1B[32m','run success')
+    console.log('\x1B[34m','app started at port 3000...')
 })
 
