@@ -38,6 +38,27 @@ class Auth {
             await next()
         }
     }
+    static verifyToken(token) {
+        try {
+            jwt.verify(token,global.config.security.secretKey)
+            return true
+        }
+        catch(error) {
+            return false
+        }
+    }
+    static getUserId(token) {
+        const data = jwt.decode(token,global.config.security.secretKey)
+        if(!data.uid) {
+            errMsg = 'token已过期'
+            throw new global.errors.Forbbiden(errMsg)    
+        }
+        else {
+            return data.uid
+        }
+        
+    }
+    
 }
 
 module.exports = {

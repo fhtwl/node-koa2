@@ -18,6 +18,45 @@ class User extends Model {
         }
         return user
     }
+
+    // 查询openid
+    static async getUserByOpenid(openid) {
+        const user = User.findOne({
+            where: {
+                open_id:openid
+            }
+        })
+        return user
+    }
+    // 注册openid
+    static async registerByOpenid(openid) {
+        const user = {
+            openId:openid
+        }
+        return await User.create(user)
+    }
+
+    // 或许用户详情等信息
+    static async getUserInfo(id) {
+        const user = {
+            id
+        }
+        const [results, metadata]= await sequelize.query(
+            `SELECT
+                id,nick_name,email,test,info
+            FROM
+                user as u 
+            WHERE
+                u.id = '${id}'`
+        )
+        if(results.length > 0) {
+            results[0].info = results[0].info || []
+            return results[0]
+        }
+        else {
+            throw new global.errors.AuthFailed('账号不存在')
+        }
+    }
 }
 
 User.init({
@@ -43,7 +82,8 @@ User.init({
         type:Sequelize.STRING(64),
         unique:true //唯一
     },
-    test:Sequelize.STRING
+    test:Sequelize.STRING,
+    info:Sequelize.STRING,
 },{
     sequelize,
     tableName: 'user'

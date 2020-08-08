@@ -52,7 +52,6 @@ const generateToken = function(uid, scope){ //传入id和权限
 }
 
 
-
 module.exports = {
     findMembers,
     generateToken,

@@ -41,7 +41,7 @@ class RegisterValidator extends LinValidator {
         }
     }
     async validateEmail(vals) {
-        const email = vals.query.email
+        const email = vals.body.email
         const user = await User.findOne({
             where: {
                 email:email
@@ -53,7 +53,7 @@ class RegisterValidator extends LinValidator {
     }
 }
 
-// token令牌
+// token令牌 账号密码登录
 class TokenValidator extends LinValidator {
     constructor () {
        super()
@@ -72,7 +72,7 @@ class TokenValidator extends LinValidator {
        ]
     }
     validateLoginType(vals) {
-        let type = vals.query.type
+        let type = vals.body.type
         if(!type) {
             throw new Error('type是必须参数')
         }
@@ -82,8 +82,82 @@ class TokenValidator extends LinValidator {
     } 
 }
 
+// token令牌 微信登录
+class MiniTokenValidator extends LinValidator {
+    constructor () {
+       super()
+       this.code = [
+           new Rule('isLength','code不得为空',{
+               min:4,
+               max:128
+           })
+       ]
+    }
+    validateLoginType(vals) {
+        let type = vals.body.type
+        if(!type) {
+            throw new Error('type是必须参数')
+        }
+        if(!LoginType.isThisType(type)) {
+            throw new Error('type是不合法')
+        }
+    } 
+}
+
+// 校验token不为空 
+class NotEmptyValidator extends LinValidator {
+    constructor () {
+        super()
+        this.token = [
+            new Rule('isLength','不能为空',{min:1})
+        ]
+    }
+}
+
+// 搜索所有诗
+class SearchValidator extends LinValidator {
+    constructor () {
+        super()
+        this.currentPage = [
+            new Rule('isInt','需要是正整数',{min:1})
+        ]
+        this.limit = [
+            new Rule('isInt','需要是正整数',{min:1})
+        ]
+        
+    }
+}
+
+// 新增或者移除收藏校验
+class setCollectionValidator extends LinValidator {
+    constructor () {
+        super()
+        this.token = [
+            new Rule('isLength','不能为空',{min:1})
+        ]
+        this.poetryId = [
+            new Rule('isLength','不能为空',{min:1})
+        ]
+        this.userId = [
+            new Rule('isLength','不能为空',{min:1})
+        ]
+        this.authorId = [
+            new Rule('isLength','不能为空',{min:1})
+        ]
+        this.type = [
+            new Rule('isLength','不能为空',{min:1})
+        ]
+    }
+}
+
+
+
 module.exports = {
     PositiveIntegerValidator,
     RegisterValidator,
-    TokenValidator
+    TokenValidator,
+    MiniTokenValidator,
+    NotEmptyValidator,
+    SearchValidator,
+    setCollectionValidator
 }

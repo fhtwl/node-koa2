@@ -1,28 +1,31 @@
 const Router = require('koa-router')
-const {TokenValidator} = require('../../validtors/validtor')
+const {TokenValidator,MiniTokenValidator,NotEmptyValidator} = require('../../validtors/validtor')
 const {LoginType} = require('../../lib/enum')
 const { User } = require('../../models/user')
 const { generateToken } = require('../../../core/util')
 const { Auth } = require('../../../middlewares/auth')
-
+const WxManager = require('../../services/wx')
 
 const router = new Router({
     prefix: '/app/api/v1/token'
 })
 
+// 登录获取token的接口
 router.post('/', async (ctx,next)=> {
-    const v = await new TokenValidator().validate(ctx)
-    const query = ctx.request.query
+    let v 
+    const query = ctx.request.body
     let type = Number(query.type)
     let token;
     switch(type) {
-        case LoginType.USER_EMAIL:
+        case LoginType.USER_EMAIL: //email登录
+            v = await new TokenValidator().validate(ctx)
             token = await emailLogin(query.account,query.secret)
             break
-        case LoginType.USER_MINI_PROGRAM:
-            // await emailLogin()
+        case LoginType.USER_MINI_PROGRAM: //小程序登录
+            v = await new MiniTokenValidator().validate(ctx)
+            token = await wxLogin(query.code)
             break
-        case LoginType.ADMIN_EMAIL:
+        case LoginType.ADMIN_EMAIL: //超级管理员登录
             break
         default:
             throw new global.errors.ParameterException('没有相应的处理函数')
@@ -32,10 +35,27 @@ router.post('/', async (ctx,next)=> {
     }
 })
 
+// 验证token是否通过的接口
+router.post('/verify',async (ctx,next)=> {
+    const v = await new NotEmptyValidator().validate(ctx)
+    const query = ctx.request.body
+    const result = await Auth.verifyToken(query.token)
+    ctx.body = {
+        result
+    }
+})
+
+
 // email登录
 async function emailLogin(account,secret) {
     const user= await User.verifyEmailPassword(account,secret);
     return token = generateToken(user.id, Auth.USER)
+}
+
+// 微信登录
+async function wxLogin(code) {
+    const token= await WxManager.codeToToken(code);
+    return token
 }
 
 module.exports = router

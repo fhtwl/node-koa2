@@ -55,11 +55,22 @@ class Forbbiden extends HttpException {
     }
 }
 
+// 查询失败
+class QueryFailed extends HttpException {
+    constructor(msg,errorCode) {
+        super()
+        this.code = 500
+        this.message = msg || '未查到匹配的数据'
+        this.errorCode = errorCode || 100006
+    }
+}
+
 module.exports = {
     HttpException,
     ParameterException,
     Success,
     NotFount,
     AuthFailed,
-    Forbbiden
+    Forbbiden,
+    QueryFailed
 }

@@ -5,13 +5,13 @@ const {User} = require('../../models/user');
 const { Success } = require("../../../core/http-exception");
 // const {success} = require("../../lib/helper")
 const router = new Router({
-    prefix:'/app/api/v1/user',//路由前缀
+    prefix:'/app/api/v1/register',//路由前缀
 })
 
-router.post('/register',async (ctx,next)=> {
+router.post('/',async (ctx,next)=> {
 
     const v = await new RegisterValidator().validate(ctx)
-    const query = ctx.request.query
+    const query = ctx.request.body
     const user = {
         email: query.email,
         password:  query.password1,
