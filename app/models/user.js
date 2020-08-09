@@ -50,7 +50,7 @@ class User extends Model {
                 u.id = '${id}'`
         )
         if(results.length > 0) {
-            results[0].info = results[0].info || []
+            results[0].info = results[0].info || {avatar:''}
             return results[0]
         }
         else {
