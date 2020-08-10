@@ -15,13 +15,13 @@ router.get('/poetry',async (ctx,next)=> {
     let token = query.token
     let userId = await Auth.getUserId(token)
     let authorId = query.authorId
+    let collectionId = query.collectionId
     let poetry
     switch(type) {
         case '1': // 新增
             poetry = await Collection.addCollection(poetryId,userId,authorId)
             break
         case '2': // 移除
-            let collectionId
             poetry = await Collection.destroyCollection(collectionId)
             break
         default:

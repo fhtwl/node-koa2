@@ -9,19 +9,31 @@ class Poetry extends Model {
     static async queryPoetryList(keyword,currentPage,limit,userId) {
         const Op = Sequelize.Op
         let offset = (currentPage - 1) * 10
-        const [results, metadata]= await sequelize.query(
-            `SELECT
-                p.*,
-                c.id as collection_id
-            FROM
-                poetry as p 
-                LEFT JOIN collection as c on p.id = c.poetry_id and c.user_id = ${userId}
-            WHERE
-                p.title LIKE '%${keyword}%' 
-                OR p.content LIKE '%${keyword}%' 
-                LIMIT ${offset},
-                ${limit};`
-        )
+        let query = userId ?  `SELECT
+                                p.*,
+                                c.id as collection_id
+                            FROM
+                                poetry as p 
+                                LEFT JOIN collection as c on p.id = c.poetry_id and c.user_id = ${userId}
+                            WHERE
+                                p.title LIKE '%${keyword}%' 
+                                OR p.content LIKE '%${keyword}%'
+                            ORDER BY p.id 
+                            LIMIT ${offset},
+                                ${limit};`
+                                :
+                                `SELECT
+                                p.*,
+                                c.id as collection_id
+                            FROM
+                                poetry as p
+                            WHERE
+                                p.title LIKE '%${keyword}%' 
+                                OR p.content LIKE '%${keyword}%' 
+                            ORDER BY p.id;
+                            LIMIT ${offset},
+                                ${limit};`;
+        const [results, metadata]= await sequelize.query(query)
         // const results = await Poetry.findAll({
         //     include: [
         //         {

@@ -47,7 +47,7 @@ class Collection extends Model {
 
     // 取消收藏
     static async destroyCollection(id) {
-        const collection = await User.destroy({
+        const collection = await Collection.destroy({
             where: {
                id
             }

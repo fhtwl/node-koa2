@@ -135,19 +135,29 @@ class setCollectionValidator extends LinValidator {
         this.token = [
             new Rule('isLength','不能为空',{min:1})
         ]
-        this.poetryId = [
-            new Rule('isLength','不能为空',{min:1})
-        ]
-        this.userId = [
-            new Rule('isLength','不能为空',{min:1})
-        ]
-        this.authorId = [
-            new Rule('isLength','不能为空',{min:1})
-        ]
         this.type = [
             new Rule('isLength','不能为空',{min:1})
         ]
     }
+    validateSetCollection(vals) {
+        let type = vals.body.type
+        if(type == 1){
+            if(poetryId && userId && authorId) {
+
+            }
+            else {
+                throw new Error('poetryId、userId、authorId不得为空')
+            }
+        }
+        if(type == 2){
+            if(collectionId) {
+
+            }
+            else {
+                throw new Error('collectionId不得为空')
+            }
+        }
+    } 
 }
 
 

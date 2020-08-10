@@ -21,7 +21,7 @@ const sequelize = new Sequelize(dbName,username,password,{
         updatedAt:'updated_at',
         underscored:true, //自动添加的字段使用下划线，如：createdAt在数据库中的字段名会是created_at
         // deletedAt:'deleted_at',
-        // paranoid: true //虚拟删除，启用该配置后，数据不会真实删除，而是添加一个deletedAt属性
+        paranoid: false //虚拟删除，启用该配置后，数据不会真实删除，而是添加一个deletedAt属性
     },
     // pool: {
     //     max: 5,
