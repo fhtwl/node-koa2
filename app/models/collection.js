@@ -5,25 +5,32 @@ const {sequelize} = require('../../core/db')
 
 class Collection extends Model {
     // 查询所有收藏
-    static async queryCollectionList(user_id,currentPage,limit) {
+    static async queryCollectionList(currentPage,limit,userId) {
         const Op = Sequelize.Op
         let offset = (currentPage - 1) * 10
-        const collection = await Collection.findAll({
-            where: {               
-                user_id
-            },
-            limit,
-            offset
-        })
-        // const poetry = await Poetry.findAll({
-        //     where:{
-        //         author:'李白'
-        //     }
+        // const collection = await Collection.findAll({
+        //     where: {               
+        //         userId
+        //     },
+        //     limit,
+        //     offset
         // })
-        if(!collection) {
-            throw new global.errors.QueryFailed('还未收藏')
-        }  
-        return collection
+        let query = `SELECT
+                        c.*,
+                        p.title,
+                        p.content,
+                        p.author
+                    FROM
+                        collection as c 
+                       
+                        LEFT JOIN poetry as p on c.poetry_id = p.id
+                    WHERE
+                        c.user_id = '${userId}'
+                    ORDER BY c.updated_at 
+                    LIMIT ${offset},
+                        ${limit};`
+        const [results, metadata]= await sequelize.query(query)
+        return results
     }
     // 判断这首诗是否被收藏
     static async getCollectionStatus(poetry_id) {

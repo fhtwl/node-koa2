@@ -55,6 +55,15 @@ class Forbbiden extends HttpException {
     }
 }
 
+class LoginExpired extends HttpException {
+    constructor(msg,errorCode) {
+        super()
+        this.code = 402
+        this.message = msg || '登录已过期，请重新登录'
+        this.errorCode = errorCode || 100007
+    }
+}
+
 // 查询失败
 class QueryFailed extends HttpException {
     constructor(msg,errorCode) {
@@ -72,5 +81,6 @@ module.exports = {
     NotFount,
     AuthFailed,
     Forbbiden,
-    QueryFailed
+    QueryFailed,
+    LoginExpired 
 }

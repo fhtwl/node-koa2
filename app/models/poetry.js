@@ -23,14 +23,13 @@ class Poetry extends Model {
                                 ${limit};`
                                 :
                                 `SELECT
-                                p.*,
-                                c.id as collection_id
+                                p.*
                             FROM
                                 poetry as p
                             WHERE
                                 p.title LIKE '%${keyword}%' 
                                 OR p.content LIKE '%${keyword}%' 
-                            ORDER BY p.id;
+                            ORDER BY p.id
                             LIMIT ${offset},
                                 ${limit};`;
         const [results, metadata]= await sequelize.query(query)
@@ -76,6 +75,24 @@ class Poetry extends Model {
         }  
         return results
     }
+
+    static async getPoetryInfo(poetryId) {
+        let query = `SELECT
+                    p.*,
+                    a.intro
+                FROM
+                    poetry as p 
+                    LEFT JOIN poetry_author as a on p.author_id = a.id
+                WHERE
+                    p.id = '${poetryId}'
+                ORDER BY p.id`;
+        const [results, metadata]= await sequelize.query(query)
+        if(!results) {
+            throw new global.errors.QueryFailed('并无匹配的唐诗')
+        }  
+        return results
+    }
+    
 }
 
 Poetry.init({

@@ -29,7 +29,7 @@ const product = {
     }
 }
 
-let config = product
+let config = dev
 
 config.security = { //token key 配置
     secretKey: 'abcdefg', //key

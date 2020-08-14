@@ -132,17 +132,23 @@ class SearchValidator extends LinValidator {
 class setCollectionValidator extends LinValidator {
     constructor () {
         super()
-        this.token = [
-            new Rule('isLength','不能为空',{min:1})
-        ]
+        // this.token = [
+        //     new Rule('isLength','不能为空',{min:1})
+        // ]
         this.type = [
             new Rule('isLength','不能为空',{min:1})
         ]
     }
     validateSetCollection(vals) {
-        let type = vals.body.type
+        let type = vals.query.type
+        let token = vals.query.token
+        let poetryId = vals.query.poetryId
+        let authorId = vals.query.authorId
+        if(!token) {
+            throw new Error('请先登录')
+        }
         if(type == 1){
-            if(poetryId && userId && authorId) {
+            if(poetryId && authorId) {
 
             }
             else {
@@ -161,6 +167,16 @@ class setCollectionValidator extends LinValidator {
 }
 
 
+// 查询用户信息
+class userInfoValidator extends LinValidator {
+    constructor () {
+        super()
+        this.token = [
+            new Rule('isLength','请先登录',{min:1})
+        ]
+    }
+}
+
 
 module.exports = {
     PositiveIntegerValidator,
@@ -169,5 +185,6 @@ module.exports = {
     MiniTokenValidator,
     NotEmptyValidator,
     SearchValidator,
-    setCollectionValidator
+    setCollectionValidator,
+    userInfoValidator
 }

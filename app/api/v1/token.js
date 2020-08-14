@@ -5,12 +5,20 @@ const { User } = require('../../models/user')
 const { generateToken } = require('../../../core/util')
 const { Auth } = require('../../../middlewares/auth')
 const WxManager = require('../../services/wx')
+const { Token } = require('../../models/token')
 
 const router = new Router({
     prefix: '/app/api/v1/token'
 })
 
-// 登录获取token的接口
+/*
+ * 登录获取token的接口
+ * @param { string } type ,100微信登录，101邮箱登录
+ * @param { string } account ,邮箱, type为101时必填
+ * @param { string } secret ,密码，type为101时必填
+ * @param { string } code ，微信code ，type为100时必填
+ * @return { string } token  成功返回token
+ */
 router.post('/', async (ctx,next)=> {
     let v 
     const query = ctx.request.body
@@ -30,18 +38,37 @@ router.post('/', async (ctx,next)=> {
         default:
             throw new global.errors.ParameterException('没有相应的处理函数')
         }
+    await Token.saveToken(token)
     ctx.body = {
         token
     }
 })
 
-// 验证token是否通过的接口
+/*
+ * 验证token是否通过的接口
+ * @param { string } token
+ * @return { Boolean } true  成功返回true
+ */
 router.post('/verify',async (ctx,next)=> {
     const v = await new NotEmptyValidator().validate(ctx)
     const query = ctx.request.body
     const result = await Auth.verifyToken(query.token)
     ctx.body = {
         result
+    }
+})
+
+/*
+ * 注销登录
+ * @param { string } token
+ * @return { Boolean } true  成功返回true
+ */
+router.post('/cancellation',async (ctx,next)=> {
+    const v = await new NotEmptyValidator().validate(ctx)
+    const query = ctx.request.body
+    const result = await Token.deleteToken(query.token)
+    ctx.body = {
+        success: result
     }
 })
 
