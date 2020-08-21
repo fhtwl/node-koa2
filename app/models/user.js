@@ -30,13 +30,15 @@ class User extends Model {
     }
     // 注册openid
     static async registerByOpenid(openid) {
+        var nickName= '用户_' + new Date().getTime().toString() + 'c' + Math.round(Math.random() * 10000).toString()
         const user = {
-            openId:openid
+            openId:openid,
+            nickName,
         }
         return await User.create(user)
     }
 
-    // 或许用户详情等信息
+    // 获取用户详情等信息
     static async getUserInfo(id) {
         const user = {
             id
@@ -55,6 +57,24 @@ class User extends Model {
         }
         else {
             throw new global.errors.AuthFailed('账号不存在')
+        }
+    }
+
+     // 保存用户信息
+     static async setUserInfo(userId,info) {
+        const [results, metadata]= await sequelize.query(
+            `UPDATE
+                user
+            SET
+                info = '${info}'
+            WHERE
+                id = '${userId}'`
+        )
+        if(results.serverStatus = 2) {
+            return '保存成功'
+        }
+        else {
+            throw new global.errors.AuthFailed('修改失败')
         }
     }
 }

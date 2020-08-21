@@ -54,12 +54,20 @@ class Collection extends Model {
 
     // 取消收藏
     static async destroyCollection(id) {
-        const collection = await Collection.destroy({
-            where: {
-               id
-            }
-        })
-        return collection
+        // const collection = await Collection.destroy({
+        //     where: {
+        //        id
+        //     }
+        // })
+        let query = `
+                        DELETE
+                        FROM
+                            collection
+                        WHERE
+                            id in (${id})
+                    `
+        const [results, metadata]= await sequelize.query(query)
+        return results
     }
     
 }

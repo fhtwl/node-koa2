@@ -27,7 +27,7 @@ const { s2t,t2s } = require('../../../core/utils')
 // init()
 
 const router = new Router({
-    prefix:'/app/api/v1'
+    prefix:'/app/api/v1/search'
 })
 
 /*
@@ -38,7 +38,7 @@ const router = new Router({
  * @param { string } limit ，分页 每页显示数量
  * @return { Array } 查询到的数据的数组
  */
-router.get('/search',async (ctx,next)=> {
+router.get('/',async (ctx,next)=> {
     let v = await new SearchValidator().validate(ctx)
     const query = ctx.request.query
     let keyword = s2t(query.keyword) //将简体关键字替换为繁体
@@ -62,7 +62,7 @@ router.get('/search',async (ctx,next)=> {
  * @param { string } poetryId ,诗id
  * @return { Object } 返回诗的详情和诗作者详情
  */
-router.get('/search/getPoetryInfo',async (ctx,next)=> {
+router.get('/getPoetryInfo',async (ctx,next)=> {
     let v = await new SearchValidator()
     const query = ctx.request.query
     let poetryId = query.poetryId
@@ -73,5 +73,20 @@ router.get('/search/getPoetryInfo',async (ctx,next)=> {
         success:true
     }
 })
+
+/*
+ * 获取随机诗推荐
+ * @return { Object } 返回诗的详情和诗作者详情
+ */
+router.get('/getRecommend',async (ctx,next)=> {
+    let poetry = await Poetry.getRecommendInfo()
+    
+    ctx.body = {
+        data: poetry,
+        success:true
+    }
+})
+
+
 
 module.exports = router

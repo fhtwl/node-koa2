@@ -144,6 +144,7 @@ class setCollectionValidator extends LinValidator {
         let token = vals.query.token
         let poetryId = vals.query.poetryId
         let authorId = vals.query.authorId
+        let collectionId = vals.query.collectionId
         if(!token) {
             throw new Error('请先登录')
         }
@@ -177,6 +178,16 @@ class userInfoValidator extends LinValidator {
     }
 }
 
+// 保存用户信息
+class setUserInfoValidator extends LinValidator {
+    constructor () {
+        super()
+        this.token = [
+            new Rule('isLength','请先登录',{min:1})
+        ]
+    }
+}
+
 
 module.exports = {
     PositiveIntegerValidator,
@@ -186,5 +197,6 @@ module.exports = {
     NotEmptyValidator,
     SearchValidator,
     setCollectionValidator,
-    userInfoValidator
+    userInfoValidator,
+    setUserInfoValidator
 }

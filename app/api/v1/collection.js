@@ -59,7 +59,8 @@ router.get('/queryCollectionList',async (ctx,next)=> {
     let userId = await Auth.getUserId(token)
     let collectionList = await Collection.queryCollectionList(currentPage,limit,userId)
     ctx.body = {
-        data: collectionList
+        data: collectionList,
+        success: true
     }
 })
 

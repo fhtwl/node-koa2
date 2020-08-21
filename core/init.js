@@ -7,6 +7,7 @@ class InitManager {
         InitManager.InitLoadRouters()
         InitManager.LoadHttpException()
         InitManager.LoadConfig()
+        InitManager.LoadStatic()
     }
     // 加载http接口
     static InitLoadRouters() {
@@ -30,6 +31,12 @@ class InitManager {
         const config = require('../config/config')
         // console.log(process.cwd())
         global.config = config
+    }
+    // 加载静态文件访问配置
+    static LoadStatic () {
+        const path = require('path')
+        const staticFiles = require('koa-static')
+        InitManager.app.use(staticFiles(path.join(`${process.cwd()}/public/`)))
     }
 }
 module.exports = InitManager
