@@ -1,9 +1,8 @@
 const Router = require("koa-router");
 const { Poetry } = require('../../models/poetry')
-const { PoetryAuthor } = require('../../models/PoetryAuthor')
 const {SearchValidator} = require('../../validtors/validtor')
 const { Auth } = require('../../../middlewares/auth')
-const { s2t,t2s } = require('../../../core/utils')
+const { s2t,getSimplified } = require('../../../core/utils')
 
 // Poetry.hasOne(PoetryAuthor,{
 //     foreignKey: 'id'
@@ -41,16 +40,19 @@ const router = new Router({
 router.get('/',async (ctx,next)=> {
     let v = await new SearchValidator().validate(ctx)
     const query = ctx.request.query
-    let keyword = s2t(query.keyword) //将简体关键字替换为繁体
+    let keyword = query.keyword
+    let _keyword = s2t(query.keyword) //将简体关键字替换为繁体
     let currentPage = Number(query.currentPage)
     let limit = Number(query.limit)
+    let searchType = JSON.parse(query.searchType)
     let token = query.token || ''
     let userId
     if(token) {
         userId = await Auth.getUserId(token)
     }
-    let poetry = await Poetry.queryPoetryList(keyword,currentPage,limit,userId)
-    
+    let chineseType = ctx.request.header.chinesetype //请求头默认小写
+    let poetry = await Poetry.queryPoetryList(keyword,_keyword,currentPage,limit,userId,searchType)
+    poetry.data = getSimplified(poetry.data,chineseType)
     ctx.body = {
         data: poetry,
         success:true
@@ -67,7 +69,8 @@ router.get('/getPoetryInfo',async (ctx,next)=> {
     const query = ctx.request.query
     let poetryId = query.poetryId
     let poetry = await Poetry.getPoetryInfo(poetryId)
-    
+    let chineseType = ctx.request.header.chinesetype //请求头默认小写
+    poetry = getSimplified(poetry,chineseType)
     ctx.body = {
         data: poetry,
         success:true
@@ -80,7 +83,8 @@ router.get('/getPoetryInfo',async (ctx,next)=> {
  */
 router.get('/getRecommend',async (ctx,next)=> {
     let poetry = await Poetry.getRecommendInfo()
-    
+    let chineseType = ctx.request.header.chinesetype //请求头默认小写
+    poetry = getSimplified(poetry,chineseType)
     ctx.body = {
         data: poetry,
         success:true

@@ -14,7 +14,39 @@ const t2s = (str) => {
     return k;
 }
 
+const getSimplified = (obj,chineseType)=> {
+    if(chineseType == 'simplified') {
+        switch(typeof obj) {
+            case 'object':
+                if(obj instanceof Array) {
+                    obj.filter((v,i) => {
+                        for(let key in v) {
+                            if(typeof v[key] == 'string') {
+                                v[key] = t2s(v[key])
+                            }
+                        }
+                        return v
+                    })
+                }
+                else {
+                    for(let key in obj) {
+                        if(typeof obj[key] == 'string') {
+                            obj[key] = t2s(obj[key])
+                        }
+                    } 
+                }
+                break;
+            case 'string':
+                obj = t2s(obj)
+               
+        }
+    }
+    
+    return obj
+}
+
 module.exports = {
     s2t,
-    t2s
+    t2s,
+    getSimplified
 }

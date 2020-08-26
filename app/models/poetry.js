@@ -7,31 +7,61 @@ const { Collection } = require('./collection')
 
 class Poetry extends Model {
     // 查询符合条件的诗的数组
-    static async queryPoetryList(keyword,currentPage,limit,userId) {
+    static async queryPoetryList(keyword,_keyword,currentPage,limit,userId,searchType) {
         const Op = Sequelize.Op
         let offset = (currentPage - 1) * 10
+        let where = ''
+        switch(searchType.type) {
+            case 'all':
+                where = `p.title LIKE '%${keyword}%' 
+                        OR p.content LIKE '%${keyword}%'
+                        OR a.NAME LIKE '%${_keyword}%'` 
+                break;
+            case 'author':
+                where = `a.NAME LIKE '%${_keyword}%'`
+                break;
+            case 'title':
+                where = `p.title LIKE '%${keyword}%`
+            case 'content':
+                where = `p.content LIKE '%${keyword}%`
+        }
         let query = userId ?  `SELECT
-                                p.*,
-                                c.id as collection_id
-                            FROM
-                                poetry as p 
-                                LEFT JOIN collection as c on p.id = c.poetry_id and c.user_id = ${userId}
-                            WHERE
-                                p.title LIKE '%${keyword}%' 
-                                OR p.content LIKE '%${keyword}%'
-                            ORDER BY p.id 
-                            LIMIT ${offset},
-                                ${limit};`
+                                    * 
+                                FROM
+                                    (
+                                    SELECT
+                                        p.*,
+                                        c.id AS collection_id 
+                                    FROM
+                                        poetry AS p
+                                        LEFT JOIN collection AS c ON p.id = c.poetry_id
+                                        LEFT JOIN poetry_author AS a ON p.author_id = a.id 
+                                        AND c.user_id = ${userId} 
+                                    WHERE
+                                        ${where}  UNION ALL
+                                    SELECT
+                                        p.*,
+                                        c.id AS collection_id 
+                                    FROM
+                                        poetry AS p
+                                        LEFT JOIN collection AS c ON p.id = c.poetry_id
+                                        LEFT JOIN poetry_author AS a ON p.author_id = a.id 
+                                    WHERE
+                                        ${where}
+                                    ) t 
+                                    LIMIT ${offset},
+                                    ${limit};`
                                 :
-                                `SELECT SQL_CALC_FOUND_ROWS
-                                p.*
-                            FROM
-                                poetry as p
-                            WHERE
-                                p.title LIKE '%${keyword}%' 
-                                OR p.content LIKE '%${keyword}%' 
-                            ORDER BY p.id
-                            LIMIT ${offset},
+                                `SELECT
+                                    p.*,
+                                    c.id AS collection_id 
+                                FROM
+                                    poetry AS p
+                                    LEFT JOIN collection AS c ON p.id = c.poetry_id
+                                    LEFT JOIN poetry_author AS a ON p.author_id = a.id 
+                                WHERE
+                                    ${where}
+                                LIMIT ${offset},
                                 ${limit};`;
         const [results, metadata]= await sequelize.query(query)
         if(!results) {
@@ -57,8 +87,7 @@ class Poetry extends Model {
                     poetry as p 
                     LEFT JOIN poetry_author as a on p.author_id = a.id
                 WHERE
-                    p.id = '${poetryId}'
-                ORDER BY p.id`;
+                    p.id = '${poetryId}'`;
         const [results, metadata]= await sequelize.query(query)
         if(!results) {
             throw new global.errors.QueryFailed('并无匹配的唐诗')

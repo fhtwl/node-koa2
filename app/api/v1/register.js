@@ -20,7 +20,10 @@ router.post('/',async (ctx,next)=> {
     console.log(user)
     let r = await User.create(user)
     
-    throw new global.errors.Success()
+    // throw new global.errors.Success()
+    ctx.body = {
+        success: true
+    }
     // success()
     // throw new Error('api exception')
 })

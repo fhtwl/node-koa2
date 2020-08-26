@@ -8,6 +8,7 @@ class InitManager {
         InitManager.LoadHttpException()
         InitManager.LoadConfig()
         InitManager.LoadStatic()
+        InitManager.LoadCrossDomain()
     }
     // 加载http接口
     static InitLoadRouters() {
@@ -37,6 +38,11 @@ class InitManager {
         const path = require('path')
         const staticFiles = require('koa-static')
         InitManager.app.use(staticFiles(path.join(`${process.cwd()}/public/`)))
+    }
+    // 跨域设置
+    static LoadCrossDomain () {
+        const cors = require('koa2-cors');
+        InitManager.app.use(cors())
     }
 }
 module.exports = InitManager
