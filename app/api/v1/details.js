@@ -1,5 +1,5 @@
 const Router = require("koa-router");
-const { Poetry } = require('../../models/poetry')
+const { Poetry } = require('../../models/Poetry')
 const {SearchValidator} = require('../../validtors/validtor')
 const { Auth } = require('../../../middlewares/auth')
 const { s2t,getSimplified } = require('../../../core/utils')

@@ -1,5 +1,5 @@
 const Router = require("koa-router");
-const { Collection } = require('../../models/collection')
+const { Collection } = require('../../models/Collection')
 const { setCollectionValidator } = require('../../validtors/validtor')
 const { Auth } = require('../../../middlewares/auth')
 

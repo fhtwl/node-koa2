@@ -1,7 +1,7 @@
 const Router = require("koa-router");
 const bcrypt = require("bcryptjs")
 const {RegisterValidator} = require('../../validtors/validtor')
-const {User} = require('../../models/user');
+const {User} = require('../../models/User');
 const { Success } = require("../../../core/http-exception");
 // const {success} = require("../../lib/helper")
 const router = new Router({

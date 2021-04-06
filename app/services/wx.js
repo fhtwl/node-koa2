@@ -1,6 +1,6 @@
 const util = require('util')
 const { default: Axios } = require('axios')
-const { User } = require('../models/user')
+const { User } = require('../models/User')
 const { generateToken } = require('../../core/util')
 const { Auth } = require('../../middlewares/auth')
 

@@ -2,7 +2,7 @@ const {Sequelize,Model} = require('sequelize')
 const bcrypt = require("bcryptjs")
 const {sequelize} = require('../../core/db')
 const { PoetryAuthor } = require('./PoetryAuthor')
-const { Collection } = require('./collection')
+const { Collection } = require('./Collection')
 // Poetry.belongsTo(PoetryAuthor,{foreignKey:'author_id',targetKey: 'id'});
 
 class Poetry extends Model {
